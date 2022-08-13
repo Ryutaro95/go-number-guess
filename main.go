@@ -18,34 +18,42 @@ type Game struct {
 
 func main() {
 	var game Game
-
-	if err := game.receiveNums(); err != nil {
+	game.digit = digit
+	if err := game.start(); err != nil {
 		fmt.Fprintf(os.Stderr, "err: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Println(game)
 }
 
-func (g *Game) receiveNums() error {
+func (g *Game) start() error {
+	for {
+		str, err := g.receiveNums()
+		if err != nil {
+			return err
+		}
+
+		if err := g.verifyDigit(str); err != nil {
+			fmt.Printf("%s\n", err)
+			continue
+		}
+	}
+}
+
+func (g *Game) receiveNums() (string, error) {
 	var str string
 	if _, err := fmt.Scan(&str); err != nil {
-		return err
-	}
-
-	// TODO: asks for input again
-	if err := verifyDigit(str); err != nil {
-		return err
+		return "", err
 	}
 
 	for _, s := range str {
 		g.playerNums = append(g.playerNums, fmt.Sprintf("%c", s))
 	}
-	return nil
+	return str, nil
 }
 
-func verifyDigit(nums string) error {
-	if len(nums) != digit {
-		return errors.New(fmt.Sprintf("%v digit are requried", digit))
+func (g *Game) verifyDigit(nums string) error {
+	if len(nums) != g.digit {
+		return fmt.Errorf("%s digit are required", g.digit)
 	}
 	return nil
 }
