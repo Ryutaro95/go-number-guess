@@ -34,7 +34,7 @@ func TestIncludes(t *testing.T) {
 	}
 }
 
-func TestFuga(t *testing.T) {
+func TestHoge(t *testing.T) {
 	type args struct {
 		inputs   []string
 		corrects []string
